@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect, useContext } from "react";
 import "./Chatpage.css";
 import MyContext from "../../context/AuthContext";
+import SendIcon from "@mui/icons-material/Send";
 
 function Chatpage() {
   const message = useRef();
@@ -18,9 +19,9 @@ function Chatpage() {
 
     socket.on("recieveroom", ({ samplemsg, activeUser }) => {
       console.log("inside receive room msg");
-      console.log(samplemsg);
-      console.log(roomID);
-
+      // console.log(samplemsg);
+      // console.log(roomID);
+      console.log(activeUser);
       // Get the current messages for the room or initialize it as an empty array
       const currentRoomMessages = messages[roomID] || [];
 
@@ -52,20 +53,107 @@ function Chatpage() {
 
   return (
     <>
-      {state ? (
-        <div className="chatscreen_container">
-          <div className="Chatscreen">
-            <ul>
-              {messages[roomID]?.map((data, id) => (
-                <div key={id}>
-                  <div className="currentUser">{currentUser}</div>
-                  <li>{data}</li>
+      {true ? (
+        <div className="padded-container">
+          <div className="chat-container">
+            <div className="leftbar"></div>
+            <div className="groups">
+              <h1 className="group-heading">Groups</h1>
+              <div className="group3" onClick={() => handleClick(1)}>
+                <img src="" alt="" className="group-img" />
+                <div className="group-description-container">
+                  <h3 className="groupname">Group 1</h3>
+                  <p className="group-description">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    Unde
+                  </p>
                 </div>
-              ))}
-            </ul>
+              </div>
+              <div className="group3" onClick={() => handleClick(2)}>
+                <img src="" alt="" className="group-img" />
+                <div className="group-description-container">
+                  <h3 className="groupname">Group 2</h3>
+                  <p className="group-description">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    Unde
+                  </p>
+                </div>
+              </div>
+              <div className="group3" onClick={() => handleClick(3)}>
+                <img src="" alt="" className="group-img" />
+                <div className="group-description-container">
+                  <h3 className="groupname">Group 3</h3>
+                  <p className="group-description">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    Unde
+                  </p>
+                </div>
+              </div>
+              <div className="group3" onClick={() => handleClick(4)}>
+                <img src="" alt="" className="group-img" />
+                <div className="group-description-container">
+                  <h3 className="groupname">Group 4</h3>
+                  <p className="group-description">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    Unde
+                  </p>
+                </div>
+              </div>
+              <div className="group3" onClick={() => handleClick(5)}>
+                <img src="" alt="" className="group-img" />
+                <div className="group-description-container">
+                  <h3 className="groupname">Group 5</h3>
+                  <p className="group-description">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    Unde
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="chatscreen-container1">
+              <div className="chatscreen_container">
+                <div className="chatscreen">
+                  <div className="chatscreen2">
+                    <div className="activegroup">
+                      <img src="" alt="" className="group-img2" />
+                      <div className="group-description-container2">
+                        <h3 className="groupname2">Group 1</h3>
+                        <p className="group-description2">
+                          Lorem ipsum dolor sit amet consectetur adipisicing
+                          elit. Unde
+                        </p>
+                      </div>
+                    </div>
+                    <ul className="chatbox">
+                      {messages[roomID]?.map((data, id) => (
+                        <div key={id} className="eachchat">
+                          <img src="" alt="" className="chatimg" />
+                          <div>
+                            <div className="currentUser">{currentUser}</div>
+                            <li>{data}</li>
+                          </div>
+                        </div>
+                      ))}
+                    </ul>
+                    <div className="chatscreen-input-container">
+                      <input
+                        type="text"
+                        className="chatscreen_input"
+                        ref={message}
+                        placeholder="Type your message here"
+                      />
+                      <button
+                        className="chatscreen_btn"
+                        onClick={handleMessage}
+                      >
+                        <SendIcon style={{ width: "18px", height: "18px" }} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <input type="text" ref={message} />
-          <button onClick={handleMessage}>send</button>
         </div>
       ) : (
         <>

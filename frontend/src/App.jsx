@@ -3,6 +3,7 @@ import Firstpage from "./pages/Firstpage.jsx";
 import Chatpage from "./pages/Chatpage.jsx";
 import MyContext from "../context/AuthContext.jsx";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import './app.css';
 function App() {
   const { username } = useContext(MyContext);
   // console.log("username : " + username);

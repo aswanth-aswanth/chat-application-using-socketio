@@ -10,28 +10,22 @@ let activeUser;
 const onlineUsers = [];
 io.on("connection", (socket) => {
   console.log("Connected to socketio");
-  // setInterval(()=>console.log(onlineUsers),3000);
   socket.on("newClient", (user) => {
-    // console.log("inside new client ");
-    // console.log("new client : "+user);
-    activeUser=user;
+    activeUser = user;
     !onlineUsers.find((u) => u.username === user) &&
       onlineUsers.push({ username: user, socketid: socket.id });
   });
-  // socket.join(roomid);
   var temp;
-   socket.on('joinRoom', (roomID) => {
+  socket.on("joinRoom", (roomID) => {
     socket.join(roomID); // Join the room using the roomID as the room name
-    temp=roomID;
+    temp = roomID;
     console.log(`User joined room: ${roomID}`);
   });
   socket.on("chatmessage", (samplemsg) => {
     console.log("inside chatmessage");
-    console.log("temp : " + temp);
-
-    io.to(temp).emit("recieveroom", {samplemsg,activeUser});
-    
-    // console.log("After emitting recieveroom event");
+    // console.log("temp : " + temp);
+    console.log(activeUser);
+    io.to(temp).emit("recieveroom", { samplemsg, activeUser });
   });
   socket.on("disconnect", () => {
     console.log("socketio disconnected");

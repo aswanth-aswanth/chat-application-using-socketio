@@ -1,7 +1,7 @@
 import { useContext, useRef, useEffect, useState } from "react";
 import MyContext from "../../context/AuthContext";
 import { io } from "socket.io-client";
-
+import "./firstpage.css";
 function Firstpage() {
   const { username, setUsername, socket, setSocket } = useContext(MyContext);
   const [uname, setUname] = useState();
@@ -18,8 +18,12 @@ function Firstpage() {
 
   return (
     <>
-      <input type="text" ref={user} />
-      <button onClick={handleClick}>Enter</button>
+      <div className="firstpage-container">
+        <div className="firstpage">
+          <input className="firstpage_input" placeholder="Enter your name" type="text" ref={user} required/>
+          <button className="firstpage_button" onClick={handleClick}>Enter</button>
+        </div>
+      </div>
     </>
   );
 }
