@@ -15,6 +15,7 @@ io.on("connection", (socket) => {
     !onlineUsers.find((u) => u.username === user) &&
       onlineUsers.push({ username: user, socketid: socket.id });
   });
+  console.log(onlineUsers);
   var temp;
   socket.on("joinRoom", (roomID) => {
     socket.join(roomID); // Join the room using the roomID as the room name
@@ -23,7 +24,10 @@ io.on("connection", (socket) => {
   });
   socket.on("chatmessage", (samplemsg) => {
     console.log("inside chatmessage");
-    // console.log("temp : " + temp);
+    const index = onlineUsers.findIndex(
+      (user) => user.socketid === socket.id
+    );
+    activeUser = onlineUsers[index].username;
     console.log(activeUser);
     io.to(temp).emit("recieveroom", { samplemsg, activeUser });
   });
