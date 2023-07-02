@@ -9,8 +9,13 @@ function Firstpage() {
   useEffect(() => {
     const newSocket = io("http://localhost:3000");
     setSocket(newSocket);
+    user.current.focus();
   }, []);
-
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      handleClick();
+    }
+  };
   function handleClick() {
     setUsername(user.current.value);
     socket.emit("newClient", user.current.value);
@@ -20,7 +25,7 @@ function Firstpage() {
     <>
       <div className="firstpage-container">
         <div className="firstpage">
-          <input className="firstpage_input" placeholder="Enter your name" type="text" ref={user} required/>
+          <input className="firstpage_input" placeholder="Enter your name"  onKeyDown={handleKeyPress} type="text" ref={user} required/>
           <button className="firstpage_button" onClick={handleClick}>Enter</button>
         </div>
       </div>

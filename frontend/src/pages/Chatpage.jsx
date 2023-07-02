@@ -1,17 +1,15 @@
 import { useRef, useState, useEffect, useContext } from "react";
 import "./Chatpage.css";
 import MyContext from "../../context/AuthContext";
+import LeftSection from "../components/LeftSection";
 import SendIcon from "@mui/icons-material/Send";
 
 function Chatpage() {
   const message = useRef();
-  const [state, setState] = useState(false);
-  const { socket } = useContext(MyContext);
+  const { socket, username } = useContext(MyContext);
   const [messages, setMessages] = useState({});
-  const [currentUser, setCurrentUser] = useState("");
-  const [roomMessages, setRoomMessages] = useState([]);
   const [roomID, setRoomID] = useState(null);
-  let currentUser2;
+  const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
     if (!socket) {
@@ -20,7 +18,7 @@ function Chatpage() {
 
     socket.on("recieveroom", ({ samplemsg, activeUser }) => {
       console.log("inside receive room msg");
-      console.log(activeUser);
+      console.log(username);
       const currentRoomMessages = messages[roomID] || [];
       const newRoomMessages = [
         ...currentRoomMessages,
@@ -29,146 +27,166 @@ function Chatpage() {
           msg: samplemsg,
         },
       ];
-      console.log(newRoomMessages);
-      currentUser2 = activeUser;
-      console.log(currentUser2);
       setMessages((prevMessages) => ({
         ...prevMessages,
         [roomID]: newRoomMessages,
       }));
-      setCurrentUser(activeUser);
     });
   }, [socket, messages, roomID]);
+  useEffect(() => {
+    if (isActive) {
+      message.current.focus();
+    }
+  }, [isActive]);
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleMessage();
+    }
+  };
+
   function handleClick(roomID) {
-    setState(true);
+    setIsActive(roomID === isActive ? false : roomID);
     socket.emit("joinRoom", roomID);
     setRoomID(roomID);
-    setRoomMessages([]); // Reset roomMessages when joining a new room
   }
-
   function handleMessage() {
-    const msg = message.current.value;
-    socket.emit("chatmessage", msg);
-    message.current.value = "";
+    if (message.current.value.trim() !== "" && isActive) {
+      const msg = message.current.value;
+      socket.emit("chatmessage", msg);
+      message.current.value = "";
+    }
   }
-
   return (
     <>
-      {true ? (
+      {true && (
         <div className="padded-container">
           <div className="chat-container">
             <div className="flex-item1">
               <div className="leftbar"></div>
               <div className="groups">
                 <h1 className="group-heading">Groups</h1>
-                <div className="group3" onClick={() => handleClick(1)}>
-                  <img src="" alt="" className="group-img" />
+                <div
+                  className={`group3 ${isActive === 1 ? "active" : ""}`}
+                  onClick={(e) => handleClick(1)}
+                >
+                  <img src="/assets/group1.jpg" alt="" className="group-img" />
                   <div className="group-description-container">
-                    <h3 className="groupname">Group 1</h3>
+                    <h3 className="groupname">Tech Gurus</h3>
                     <p className="group-description">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Unde
+                      Connect with tech enthusiasts to discuss the latest trends
+                      and innovations
                     </p>
                   </div>
                 </div>
-                <div className="group3" onClick={() => handleClick(2)}>
-                  <img src="" alt="" className="group-img" />
+                <div
+                  className={`group3 ${isActive === 2 ? "active" : ""}`}
+                  onClick={() => handleClick(2)}
+                >
+                  <img src="/assets/group2.jpg" alt="" className="group-img" />
                   <div className="group-description-container">
-                    <h3 className="groupname">Group 2</h3>
+                    <h3 className="groupname">Wanderlust</h3>
                     <p className="group-description">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Unde
+                      Join fellow travel enthusiasts to share stories and tips
+                      from your adventures
                     </p>
                   </div>
                 </div>
-                <div className="group3" onClick={() => handleClick(3)}>
-                  <img src="" alt="" className="group-img" />
+                <div
+                  className={`group3 ${isActive === 3 ? "active" : ""}`}
+                  onClick={() => handleClick(3)}
+                >
+                  <img src="/assets/group3.jpg" alt="" className="group-img" />
                   <div className="group-description-container">
-                    <h3 className="groupname">Group 3</h3>
+                    <h3 className="groupname">FitFam</h3>
                     <p className="group-description">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Unde
+                      Stay motivated and share fitness tips with a community of
+                      health enthusiasts
                     </p>
                   </div>
                 </div>
-                <div className="group3" onClick={() => handleClick(4)}>
-                  <img src="" alt="" className="group-img" />
+                <div
+                  className={`group3 ${isActive === 4 ? "active" : ""}`}
+                  onClick={() => handleClick(4)}
+                >
+                  <img src="/assets/group4.jpg" alt="" className="group-img" />
                   <div className="group-description-container">
-                    <h3 className="groupname">Group 4</h3>
+                    <h3 className="groupname">Book Club</h3>
                     <p className="group-description">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Unde
+                      Dive into the world of literature with fellow bookworms
+                      and discuss your favorite reads
                     </p>
                   </div>
                 </div>
-                <div className="group3" onClick={() => handleClick(5)}>
-                  <img src="" alt="" className="group-img" />
+                <div
+                  className={`group3 ${isActive === 5 ? "active" : ""}`}
+                  onClick={() => handleClick(5)}
+                >
+                  <img src="/assets/group5.jpg" alt="" className="group-img" />
                   <div className="group-description-container">
-                    <h3 className="groupname">Group 5</h3>
+                    <h3 className="groupname">Creative Hub</h3>
                     <p className="group-description">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Unde
+                      Connect with artists and writers to share and collaborate
+                      on creative projects
                     </p>
                   </div>
                 </div>
               </div>
             </div>
             <div className="flex-item2">
-              {/* <div className="chatscreen-container1"> */}
-                {/* <div className="chatscreen_container"> */}
-                  <div className="chatscreen">
-                    <div className="chatscreen2">
-                      <div className="activegroup">
-                        <img src="" alt="" className="group-img2" />
-                        <div className="group-description-container2">
-                          <h3 className="groupname2">Group 1</h3>
-                          <p className="group-description2">
-                            Lorem ipsum dolor sit amet consectetur adipisicing
-                            elit. Unde
-                          </p>
-                        </div>
-                      </div>
-                      <ul className="chatbox">
-                        {messages[roomID]?.map((data, id) => (
-                          <div key={id} className="eachchat">
-                            <img src="" alt="" className="chatimg" />
-                            <div>
-                              <div className="currentUser">{data.user}</div>
-                              <li>{data.msg}</li>
-                            </div>
+              <div className="chatscreen2">
+                <div className="activegroup">
+                  <img src="/assets/group.png" alt="" className="group-img2" />
+                  <div className="group-description-container2">
+                    <h3 className="groupname2">Start chatting</h3>
+                    <p className="group-description2">
+                      Let's kickstart the conversation and start chatting away!
+                    </p>
+                  </div>
+                </div>
+                {!isActive && (
+                  <div className="start_typing">
+                    Enter into a group and start typing
+                  </div>
+                )}
+                <ul className="chatbox">
+                  {isActive &&
+                    messages[roomID]?.map((data, id) =>
+                      username === data.user ? (
+                        <div key={id} className="eachchatright">
+                          <div>
+                            <li className="currentli">{data.msg}</li>
                           </div>
-                        ))}
-                      </ul>
-                      <div className="chatscreen-input-container">
-                        <input
-                          type="text"
-                          className="chatscreen_input"
-                          ref={message}
-                          placeholder="Type your message here"
-                        />
-                        <button
-                          className="chatscreen_btn"
-                          onClick={handleMessage}
-                        >
-                          <SendIcon style={{ width: "18px", height: "18px" }} />
-                        </button>
-                      </div>
-                    </div>
-                  {/* </div> */}
-                {/* </div> */}
+                        </div>
+                      ) : (
+                        <div key={id} className="eachchat ">
+                          <div className="chatimg">
+                            {data.user.charAt(0).toUpperCase()}
+                          </div>
+                          <div>
+                            <div className="currentUser">{data.user}</div>
+                            <li>{data.msg}</li>
+                          </div>
+                        </div>
+                      )
+                    )}
+                </ul>
+                <div className="chatscreen-input-container">
+                  <input
+                    type="text"
+                    className="chatscreen_input"
+                    ref={message}
+                    placeholder="Type your message here"
+                    onKeyDown={handleKeyPress}
+                    disabled={!isActive}
+                  />
+                  <button className="chatscreen_btn" onClick={handleMessage}>
+                    <SendIcon style={{ width: "18px", height: "18px" }} />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      ) : (
-        <>
-          <h1>Chatpage</h1>
-          <button onClick={() => handleClick(1)}>Join room1</button>
-          <button onClick={() => handleClick(2)}>Join room2</button>
-          <button onClick={() => handleClick(3)}>Join room3</button>
-          <button onClick={() => handleClick(4)}>Join room4</button>
-          <button onClick={() => handleClick(5)}>Join room5</button>
-        </>
       )}
     </>
   );
